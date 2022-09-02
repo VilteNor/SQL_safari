@@ -97,11 +97,14 @@ INSERT INTO assignments(employeeId,enclosureId,day)VALUES(
 -- MVP task:
 -- The names of the animals in a given enclosure
 
-SELECT animals.name FROM animals LEFT JOIN enclosures ON enclosures.id=animals.enclosure_id WHERE enclosures.id=1;
+-- SELECT animals.name FROM animals LEFT JOIN enclosures ON enclosures.id=animals.enclosure_id WHERE enclosures.id=1;
+-- better to use inner join if might have missing values:
+SELECT animals.name FROM animals INNER JOIN enclosures ON enclosures.id=animals.enclosure_id WHERE enclosures.id=1;
 
 -- The names of the staff working in a given enclosure
-SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.id=1;
-
+-- SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.id=1;
+-- a shorter solution:
+SELECT staff.name FROM staff INNER JOIN assignments ON assignments.employeeId=staff.id WHERE enclosureId=1;
 
 --  EXTENSION:
 
