@@ -40,7 +40,7 @@ INSERT INTO enclosures (name,capacity,closedForMaintenance)VALUES(
     false
 );
 INSERT INTO enclosures (name,capacity,closedForMaintenance)VALUES(
-    'bears',
+    'amazing bears',
     20,
     true
 );
@@ -54,14 +54,14 @@ INSERT INTO staff (name,employeeNumber)VALUES(
     456
 );
 INSERT INTO staff (name,employeeNumber)VALUES(
-    'Rikki',
+    'Rachel',
     789
 );
 
 INSERT INTO animals(name,type,age,enclosure_id)VALUES(
 'Tony',
 'Tiger',
-59,
+15,
 1
 );
 INSERT INTO animals(name,type,age,enclosure_id)VALUES(
@@ -71,9 +71,15 @@ INSERT INTO animals(name,type,age,enclosure_id)VALUES(
 1
 );
 INSERT INTO animals(name,type,age,enclosure_id)VALUES(
+'Tom',
+'Tiger',
+8,
+1
+);
+INSERT INTO animals(name,type,age,enclosure_id)VALUES(
 'Barry',
 'Bear',
-12,
+15,
 2
 );
 
@@ -102,19 +108,31 @@ INSERT INTO assignments(employeeId,enclosureId,day)VALUES(
 SELECT animals.name FROM animals INNER JOIN enclosures ON enclosures.id=animals.enclosure_id WHERE enclosures.id=1;
 
 -- The names of the staff working in a given enclosure
--- SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.id=1;
+-- SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId 
+-- INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.id=1;
 -- a shorter solution:
 SELECT staff.name FROM staff INNER JOIN assignments ON assignments.employeeId=staff.id WHERE enclosureId=1;
 
 --  EXTENSION:
 
 -- The names of staff working in enclosures which are closed for maintenance
-SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.closedForMaintenance=true;
+SELECT staff.name FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId 
+INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.closedForMaintenance=true;
 
 -- The name of the enclosure where the oldest animal lives. 
 -- If there are two animals who are the same age choose the first one alphabetically.
-
+SELECT enclosures.name FROM enclosures INNER JOIN animals ON animals.enclosure_id=enclosures.id
+ORDER BY animals.age DESC, enclosures.name ASC LIMIT 1;
 
 -- The number of different animal types a given keeper has been assigned to work with.
+SELECT COUNT( DISTINCT animals.type) FROM animals INNER JOIN enclosures ON animals.enclosure_id=enclosures.id 
+INNER JOIN assignments ON assignments.enclosureId=enclosures.id WHERE employeeId=1;
+
 -- The number of different keepers who have been assigned to work in a given enclosure
--- The names of the other animals sharing an enclosure with a given animal (eg. find the names of all the animals sharing the big cat field with Tony)
+SELECT COUNT( staff.id) FROM staff INNER JOIN assignments ON staff.id=assignments.employeeId 
+INNER JOIN enclosures ON assignments.enclosureId=enclosures.id WHERE enclosures.id=1;
+
+-- The names of the other animals sharing an enclosure with a given animal 
+-- (eg. find the names of all the animals sharing the big cat field with Tony)
+SELECT  animals.name FROM animals INNER JOIN enclosures ON animals.enclosure_id=enclosures.id 
+GROUP BY enclosures.name, animals.name HAVING enclosures.name='big cat field';
